@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const {debug, error, DialogflowConversation} = require('./common');
+const {debug, error} = require('./common');
 // Response and agent classes
 const Text = require('./rich-responses/text-response');
 const Card = require('./rich-responses/card-response');
@@ -270,9 +270,7 @@ class WebhookClient {
     if (typeof response === 'string') {
       response = new Text(response);
     }
-    if (response instanceof DialogflowConversation) {
-      this.client.addActionsOnGoogle_(response.serialize());
-    } else if (response instanceof Suggestion && this.existingSuggestion_(response.platform)) {
+    if (response instanceof Suggestion && this.existingSuggestion_(response.platform)) {
       this.existingSuggestion_(response.platform).addReply_(response.replies[0]);
     } else if (response instanceof Payload && this.existingPayload_(response.platform)) {
       throw new Error(`Payload response for ${response.platform} already defined.`);
@@ -439,29 +437,6 @@ class WebhookClient {
     }
 
     this.client.setFollowupEvent_(event);
-  }
-
-  // ---------------------------------------------------------------------------
-  //              Actions on Google methods
-  // ---------------------------------------------------------------------------
-  /**
-   * Get Actions on Google DialogflowConversation object
-   *
-   * @example
-   * const { WebhookClient } = require('dialogflow-webhook');
-   * const agent = new WebhookClient({request: request, response: response});
-   * let conv = agent.conv();
-   * conv.ask('Hi from the Actions on Google client library');
-   * agent.add(conv);
-   *
-   * @return {DialogflowConversation|null} DialogflowConversation object or null
-   */
-  conv() {
-    if (this.requestSource === PLATFORMS.ACTIONS_ON_GOOGLE) {
-      return new DialogflowConversation(this.request_);
-    } else {
-      return null;
-    }
   }
 
   // ---------------------------------------------------------------------------

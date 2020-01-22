@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const {DialogflowConversation} = require('actions-on-google');
 
 // Set library name for debug statements
 const name = 'dialogflow-fulfillment';
@@ -24,4 +23,4 @@ const error = require('debug')(`${name}:error`);
 error.log = console.error.bind(console);
 debug.log = console.log.bind(console);
 
-module.exports = {debug, error, DialogflowConversation};
+module.exports = {debug, error};
